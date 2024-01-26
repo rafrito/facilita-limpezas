@@ -20,7 +20,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
-      - "9229:9229" 
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     depends_on:
       - db
