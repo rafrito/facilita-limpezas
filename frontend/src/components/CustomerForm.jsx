@@ -1,6 +1,6 @@
-// src/components/CustomerForm.js
 import { useState } from 'react';
 import axios from 'axios';
+import Toast from './Toast.jsx'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -11,6 +11,8 @@ function CustomerForm() {
     telefone: ''
   });
 
+  const [toast, setToast] = useState({ show: false, message: '' });
+
   const handleChange = (e) => {
     setCustomer({ ...customer, [e.target.name]: e.target.value });
   };
@@ -19,13 +21,13 @@ function CustomerForm() {
     e.preventDefault();
     try {
       const response = await axios.post(`http://${BACKEND_URL}/clientes/cadastro`, customer);
-      console.log(response.data);
-      // Limpa o formulário após a submissão
       setCustomer({ nome: '', email: '', telefone: '' });
-      // Adicione aqui qualquer outra lógica pós-submissão necessária, como exibir uma notificação de sucesso
+      response.data.inserted ?
+        setToast({ show: true, message: 'Cliente cadastrado com sucesso!' }) :
+        setToast({ show: true, message: response.data.message })
     } catch (error) {
       console.error('Erro ao adicionar cliente', error);
-      // Adicione aqui qualquer lógica de tratamento de erro, como exibir uma mensagem de erro
+      setToast({ show: true, message: 'Erro ao cadastrar cliente.' });
     }
   };
 
@@ -72,6 +74,11 @@ function CustomerForm() {
         </div>
         <button type="submit">Cadastrar Cliente</button>
       </form>
+      <Toast 
+      message={toast.message}
+      show={toast.show}
+      onClose={() => setToast({ ...toast, show: false })}
+    />
     </div>
   );
 }

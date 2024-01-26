@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const Toast = ({ message, show, onClose }) => {
+  useEffect(() => {
+    if (show) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [show, onClose]);
+
   if (!show) {
     return null;
   }
-
-  setTimeout(() => {
-    onClose();
-  }, 5000);
 
   return (
     <div style={{

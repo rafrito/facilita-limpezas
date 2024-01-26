@@ -1,41 +1,66 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function CustomerList() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [customers, setCustomers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  const fetchCustomers = async (termoBusca = '') => {
     try {
-      const response = await axios.get(`http://${BACKEND_URL}/clientes/list?name=${searchTerm}`);
-      setCustomers(response.data); // Supondo que a API retorne uma lista de clientes
+      const response = await axios.post(`http://${BACKEND_URL}/clientes/list`, {
+        pagina: 0,
+        tamanhoPagina: 10,
+        termoBusca
+      });
+      setCustomers(response.data);
     } catch (error) {
       console.error('Erro ao buscar clientes', error);
+      // Tratamento de erros
     }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearch = () => {
+    fetchCustomers(searchTerm);
   };
 
   return (
     <div>
       <h2>Lista de Clientes</h2>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Digite um nome"
-        />
-        <button type="submit">Buscar</button>
-      </form>
-      {customers.map((customer, index) => (
-        <div key={index}>
-          <p>{customer.nome}</p>
-          <p>{customer.email}</p>
-          <p>{customer.telefone}</p>
-        </div>
-      ))}
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder="Pesquisar por nome ou email"
+      />
+      <button onClick={handleSearch}>Buscar</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+          </tr>
+        </thead>
+        <tbody>
+          {customers.map((customer, index) => (
+            <tr key={index}>
+              <td>{customer.nome}</td>
+              <td>{customer.email}</td>
+              <td>{customer.telefone}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

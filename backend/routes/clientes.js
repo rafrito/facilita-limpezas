@@ -17,7 +17,8 @@ router.post('/cadastro', async (req, res) => {
 
 router.post('/list', async (req, res) => {
   try {
-    const clientes = await buscarClientesPaginado(req.body.page, req.body.pageOffset, req.body.pageSize);
+    const { pagina, tamanhoPagina, termoBusca } = req.body;
+    const clientes = await buscarClientesPaginado(pagina, tamanhoPagina, termoBusca);
     res.json(clientes);
   } catch (error) {
     console.error(error);

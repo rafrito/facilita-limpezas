@@ -14,13 +14,22 @@ async function emailExiste(email) {
     return result.rows.length > 0;
 };
 
-async function buscarClientes(limit, offset) {
-    const result = await pool.query(
-        'SELECT * FROM operacao.clientes LIMIT $1 OFFSET $2',
-        [limit, offset]
-        );
+async function buscarClientes(limit, offset, termoBusca) {
+    const result = await pool.query(`
+        SELECT c.nome, c.email, c.telefone, e.eixo_x, e.eixo_y
+        FROM operacao.clientes c
+        LEFT JOIN operacao.enderecos_clientes e
+            ON c.id = e.cliente_id
+        WHERE
+            LOWER(nome) LIKE '%' || LOWER($3) || '%'
+            or LOWER(email) LIKE '%' || LOWER($3) || '%'
+        LIMIT $1 OFFSET $2
+        `,
+        [limit, offset, termoBusca]
+    );
     return result.rows;
-}
+};
+
 
 module.exports = {
     insertCliente,
