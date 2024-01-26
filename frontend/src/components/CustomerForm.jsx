@@ -1,12 +1,14 @@
 // src/components/CustomerForm.js
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 function CustomerForm() {
   const [customer, setCustomer] = useState({
     nome: '',
     email: '',
-    telefone: '',
+    telefone: ''
   });
 
   const handleChange = (e) => {
@@ -16,7 +18,7 @@ function CustomerForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://${BACKEND_URL}/customers`, customer);
+      const response = await axios.post(`http://${BACKEND_URL}/clientes/cadastro`, customer);
       console.log(response.data);
       // Limpa o formulário após a submissão
       setCustomer({ nome: '', email: '', telefone: '' });
@@ -37,6 +39,7 @@ function CustomerForm() {
             type="text"
             id="nome"
             name="nome"
+            maxLength="255"
             value={customer.nome}
             onChange={handleChange}
             required
@@ -48,6 +51,7 @@ function CustomerForm() {
             type="email"
             id="email"
             name="email"
+            maxLength="255"
             value={customer.email}
             onChange={handleChange}
             required
@@ -56,9 +60,11 @@ function CustomerForm() {
         <div>
           <label htmlFor="telefone">Telefone:</label>
           <input
-            type="text"
+            type="tel"
             id="telefone"
             name="telefone"
+            placeholder='11 999888777'
+            pattern='[0-9]{2} [0-9]{9}'
             value={customer.telefone}
             onChange={handleChange}
             required

@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.post('/cadastro', async (req, res) => {
   try {
-    const body = await cadastroCliente(req.body.nome, req.body.email, req.body.telefone);
+    const { nome, email, telefone } = req.body
+    const body = await cadastroCliente(nome, email, telefone);
     res.json(body);
   } catch (error) {
     console.error(error)
@@ -16,11 +17,11 @@ router.post('/cadastro', async (req, res) => {
 
 router.post('/list', async (req, res) => {
   try {
-      const clientes = await buscarClientesPaginado(req.body.page, req.body.pageOffset, req.body.pageSize);
-      res.json(clientes);
+    const clientes = await buscarClientesPaginado(req.body.page, req.body.pageOffset, req.body.pageSize);
+    res.json(clientes);
   } catch (error) {
-      console.error(error);
-      res.status(500).send({ message: "Erro ao buscar clientes." });
+    console.error(error);
+    res.status(500).send({ message: "Erro ao buscar clientes." });
   }
 });
 
