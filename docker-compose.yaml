@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   db:
-    image: postgres:14
+    image: postgres:16
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -9,15 +9,32 @@ services:
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
       - postgres_data:/var/lib/postgresql/data
+
   backend:
+    image: backend:1
     build: ./backend
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
-      - "3000:3000"
+      - "9229:9229" 
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     depends_on:
       - db
     volumes:
       - ./backend:/usr/src/backend
-      - ./backend:/usr/src/backend/node_modules
+      - ./backend/node_modules:/usr/src/backend/node_modules
+
+  frontend:
+    image: frontend-1
+    build: ./frontend
+    ports:
+      - "8080:80"
+    environment:
+      - BACKEND_URL=backend:${BACKEND_PORT}
+
 volumes:
   postgres_data:
