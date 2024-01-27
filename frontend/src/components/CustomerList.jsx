@@ -34,9 +34,10 @@ function CustomerList() {
   };
 
   return (
-    <div>
+    <div className='container'>
       <h2>Lista de Clientes</h2>
       <input
+        style={{width: "200px"}}
         type="text"
         value={searchTerm}
         onChange={handleSearchChange}
@@ -49,6 +50,8 @@ function CustomerList() {
             <th>Nome</th>
             <th>Email</th>
             <th>Telefone</th>
+            <th>Coordenada x</th>
+            <th>Coordenada y</th>
           </tr>
         </thead>
         <tbody>
@@ -57,6 +60,8 @@ function CustomerList() {
               <td>{customer.nome}</td>
               <td>{customer.email}</td>
               <td>{customer.telefone}</td>
+              <td>{customer.eixo_x}</td>
+              <td>{customer.eixo_y}</td>
             </tr>
           ))}
         </tbody>

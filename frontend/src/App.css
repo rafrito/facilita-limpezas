@@ -3,15 +3,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
   width: 100%;
   padding: 50px 0;
   box-sizing: border-box;
 }
 
-/* Ajuste adicional para os formulários e listagem */
 form, .customer-list {
   max-width: 600px; /* Definir uma largura máxima para o formulário e a lista */
   width: 100%; /* Faz com que o formulário e a lista ocupem a largura definida acima */
-  margin: 0 auto; /* Centraliza o formulário e a lista na página */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+td {
+  padding: 0 15px;
 }

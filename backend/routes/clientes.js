@@ -1,4 +1,4 @@
-const { cadastroCliente, buscarClientesPaginado } = require('../services/clientes');
+const { cadastroCliente, buscarClientesPaginado, cadastroEndereco, buscarRota } = require('../services/clientes');
 
 const express = require('express');
 const router = express.Router();
@@ -15,6 +15,17 @@ router.post('/cadastro', async (req, res) => {
   }
 });
 
+router.post('/endereco', async (req, res) => {
+  try {
+    const { email, eixo_x, eixo_y } = req.body
+    const body = await cadastroEndereco(email, eixo_x, eixo_y);
+    res.json(body);
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ message: "Erro ao cadastrar endereço." });
+  }
+});
+
 router.post('/list', async (req, res) => {
   try {
     const { pagina, tamanhoPagina, termoBusca } = req.body;
@@ -23,6 +34,16 @@ router.post('/list', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Erro ao buscar clientes." });
+  }
+});
+
+router.get('/rota', async (req, res) => {
+  try {
+    const clientes = await buscarRota();
+    res.json(clientes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Erro ao buscar rota." });
   }
 });
 
